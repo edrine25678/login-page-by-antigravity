@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animated Login & Signup Form | PaulCodes</title>
+    <title>Secure Animated Login & Signup Form | PaulCodes</title>
     <!-- Boxicons for Input Icons -->
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <!-- Google Fonts: Poppins -->
@@ -13,6 +13,12 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast" role="alert" aria-live="assertive">
+        <i id="toastIcon" class='bx bx-info-circle'></i>
+        <span id="toastMsg">Notification message</span>
+    </div>
 
     <div class="wrapper">
         <h1 class="header-title">Login | Signup Animation</h1>
@@ -25,21 +31,27 @@
             <!-- ================= LOGIN FORM ================= -->
             <div class="form-box Login">
                 <h2 class="animation" style="--li: 0s; --lo: 0.5s;">Login</h2>
-                <form action="#" onsubmit="event.preventDefault();">
+                <form id="loginForm" action="#" novalidate>
                     <div class="input-box animation" style="--li: 0.1s; --lo: 0.4s;">
-                        <input type="text" id="loginUsername" required spellcheck="false" autocomplete="off">
+                        <input type="text" id="loginUsername" required spellcheck="false" autocomplete="username">
                         <label for="loginUsername">Username</label>
                         <i class='bx bxs-user'></i>
                     </div>
 
                     <div class="input-box animation" style="--li: 0.2s; --lo: 0.3s;">
-                        <input type="password" id="loginPassword" required autocomplete="off">
+                        <input type="password" id="loginPassword" required autocomplete="current-password">
                         <label for="loginPassword">Password</label>
-                        <i class='bx bxs-lock-alt'></i>
+                        <i class='bx bx-hide toggle-pass' id="toggleLoginPass" title="Toggle password visibility" role="button" tabindex="0"></i>
+                    </div>
+
+                    <!-- Brute-force Lockout Alert -->
+                    <div id="lockoutNotice" class="lockout-notice" style="display: none;">
+                        <i class='bx bxs-error-circle'></i>
+                        <span id="lockoutTimer">Account locked. Wait 30s.</span>
                     </div>
 
                     <div class="btn-box animation" style="--li: 0.3s; --lo: 0.2s;">
-                        <button type="submit" class="btn">Login</button>
+                        <button type="submit" id="btnLogin" class="btn">Login</button>
                     </div>
 
                     <div class="logreg-link animation" style="--li: 0.4s; --lo: 0.1s;">
@@ -60,30 +72,41 @@
             <!-- ================= REGISTER FORM ================= -->
             <div class="form-box Register">
                 <h2 class="animation" style="--li: 0s; --lo: 0.6s;">Register</h2>
-                <form action="#" onsubmit="event.preventDefault();">
-                    <div class="input-box animation" style="--li: 0.1s; --lo: 0.5s;">
-                        <input type="text" id="regUsername" required spellcheck="false" autocomplete="off">
+                <form id="registerForm" action="#" novalidate>
+                    <div class="input-box animation" style="--li: 0.08s; --lo: 0.5s;">
+                        <input type="text" id="regUsername" required spellcheck="false" autocomplete="username">
                         <label for="regUsername">Username</label>
                         <i class='bx bxs-user'></i>
                     </div>
 
-                    <div class="input-box animation" style="--li: 0.2s; --lo: 0.4s;">
-                        <input type="email" id="regEmail" required spellcheck="false" autocomplete="off">
+                    <div class="input-box animation" style="--li: 0.16s; --lo: 0.4s;">
+                        <input type="email" id="regEmail" required spellcheck="false" autocomplete="email">
                         <label for="regEmail">Email</label>
                         <i class='bx bxs-envelope'></i>
                     </div>
 
-                    <div class="input-box animation" style="--li: 0.3s; --lo: 0.3s;">
-                        <input type="password" id="regPassword" required autocomplete="off">
+                    <div class="input-box password-box animation" style="--li: 0.24s; --lo: 0.3s;">
+                        <input type="password" id="regPassword" required autocomplete="new-password">
                         <label for="regPassword">Password</label>
-                        <i class='bx bxs-lock-alt'></i>
+                        <i class='bx bx-hide toggle-pass' id="toggleRegPass" title="Toggle password visibility" role="button" tabindex="0"></i>
+                    </div>
+
+                    <!-- Password Strength Meter -->
+                    <div id="strengthContainer" class="strength-container animation" style="--li: 0.32s; --lo: 0.25s;">
+                        <div class="strength-bar-track">
+                            <div id="strengthBar" class="strength-bar"></div>
+                        </div>
+                        <div class="strength-meta">
+                            <span id="strengthLabel" class="strength-label">Strength: None</span>
+                            <span id="strengthHint" class="strength-hint">Min 8 chars, A-Z, 0-9, symbol</span>
+                        </div>
                     </div>
 
                     <div class="btn-box animation" style="--li: 0.4s; --lo: 0.2s;">
-                        <button type="submit" class="btn">Register</button>
+                        <button type="submit" id="btnRegister" class="btn">Register</button>
                     </div>
 
-                    <div class="logreg-link animation" style="--li: 0.5s; --lo: 0.1s;">
+                    <div class="logreg-link animation" style="--li: 0.48s; --lo: 0.1s;">
                         <p>Already have an account?</p>
                         <a href="javascript:void(0)" class="SignInLink">Sign In</a>
                     </div>
@@ -96,6 +119,19 @@
                 <p class="animation" style="--li: 0.15s; --lo: 0.15s;">
                     We're delighted to have you here. If you need any assistance, feel free to reach out.
                 </p>
+            </div>
+
+            <!-- ================= AUTHENTICATED ACTIVE SESSION VIEW ================= -->
+            <div id="authSuccessOverlay" class="auth-overlay" style="display: none;">
+                <div class="auth-card">
+                    <i class='bx bxs-check-shield auth-shield-icon'></i>
+                    <h2>Authorization Verified</h2>
+                    <p class="auth-user-msg">Welcome back, <strong id="authUsername">User</strong>!</p>
+                    <div class="auth-meta-badge">
+                        <span class="auth-dot"></span> Secure Session Active (PBKDF2-SHA256)
+                    </div>
+                    <button id="btnLogout" class="btn btn-logout">Sign Out</button>
+                </div>
             </div>
         </div>
     </div>
