@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Login & Signup Form | PaulCodes</title>
+    <!-- Boxicons for Input Icons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="wrapper">
+        <h1 class="header-title">Login | Signup Animation</h1>
+
+        <div class="container" id="container">
+            <!-- Curved Animated Background Shapes -->
+            <div class="curved-shape"></div>
+            <div class="curved-shape2"></div>
+
+            <!-- ================= LOGIN FORM ================= -->
+            <div class="form-box Login">
+                <h2 class="animation" style="--li: 0s; --lo: 0.5s;">Login</h2>
+                <form action="#" onsubmit="event.preventDefault();">
+                    <div class="input-box animation" style="--li: 0.1s; --lo: 0.4s;">
+                        <input type="text" id="loginUsername" required spellcheck="false" autocomplete="off">
+                        <label for="loginUsername">Username</label>
+                        <i class='bx bxs-user'></i>
+                    </div>
+
+                    <div class="input-box animation" style="--li: 0.2s; --lo: 0.3s;">
+                        <input type="password" id="loginPassword" required autocomplete="off">
+                        <label for="loginPassword">Password</label>
+                        <i class='bx bxs-lock-alt'></i>
+                    </div>
+
+                    <div class="btn-box animation" style="--li: 0.3s; --lo: 0.2s;">
+                        <button type="submit" class="btn">Login</button>
+                    </div>
+
+                    <div class="logreg-link animation" style="--li: 0.4s; --lo: 0.1s;">
+                        <p>Don't have an account?</p>
+                        <a href="javascript:void(0)" class="SignUpLink">Sign Up</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ================= LOGIN INFO TEXT (RIGHT SIDE) ================= -->
+            <div class="info-text Login">
+                <h2 class="animation" style="--li: 0s; --lo: 0.3s;">WELCOME<br>BACK!</h2>
+                <p class="animation" style="--li: 0.15s; --lo: 0.15s;">
+                    We are happy to have you with us again. If you need anything, we are here to help.
+                </p>
+            </div>
+
+            <!-- ================= REGISTER FORM ================= -->
+            <div class="form-box Register">
+                <h2 class="animation" style="--li: 0s; --lo: 0.6s;">Register</h2>
+                <form action="#" onsubmit="event.preventDefault();">
+                    <div class="input-box animation" style="--li: 0.1s; --lo: 0.5s;">
+                        <input type="text" id="regUsername" required spellcheck="false" autocomplete="off">
+                        <label for="regUsername">Username</label>
+                        <i class='bx bxs-user'></i>
+                    </div>
+
+                    <div class="input-box animation" style="--li: 0.2s; --lo: 0.4s;">
+                        <input type="email" id="regEmail" required spellcheck="false" autocomplete="off">
+                        <label for="regEmail">Email</label>
+                        <i class='bx bxs-envelope'></i>
+                    </div>
+
+                    <div class="input-box animation" style="--li: 0.3s; --lo: 0.3s;">
+                        <input type="password" id="regPassword" required autocomplete="off">
+                        <label for="regPassword">Password</label>
+                        <i class='bx bxs-lock-alt'></i>
+                    </div>
+
+                    <div class="btn-box animation" style="--li: 0.4s; --lo: 0.2s;">
+                        <button type="submit" class="btn">Register</button>
+                    </div>
+
+                    <div class="logreg-link animation" style="--li: 0.5s; --lo: 0.1s;">
+                        <p>Already have an account?</p>
+                        <a href="javascript:void(0)" class="SignInLink">Sign In</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ================= REGISTER INFO TEXT (LEFT SIDE) ================= -->
+            <div class="info-text Register">
+                <h2 class="animation" style="--li: 0s; --lo: 0.3s;">WELCOME!</h2>
+                <p class="animation" style="--li: 0.15s; --lo: 0.15s;">
+                    We're delighted to have you here. If you need any assistance, feel free to reach out.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
