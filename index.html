@@ -166,9 +166,22 @@
             font-size: 0.95em;
         }
 
-        .input-group input::placeholder {
+        .input-group label {
+            position: absolute;
+            top: 50%;
+            left: 0;
             color: rgba(255, 255, 255, 0.88);
-            opacity: 1;
+            font-size: 0.95em;
+            pointer-events: none;
+            transform: translateY(-50%);
+            transition: top 0.25s ease, color 0.25s ease, font-size 0.25s ease;
+        }
+
+        .input-group input:focus + label,
+        .input-group input:not(:placeholder-shown) + label {
+            top: 2px;
+            color: #f16a32;
+            font-size: 0.72em;
         }
 
         .input-group svg {
@@ -347,11 +360,13 @@
             <h2 class="animation" style="--i:0;">Login</h2>
             <form action="#" autocomplete="on">
                 <div class="input-group animation" style="--i:1;">
-                    <input type="text" name="username" placeholder="Username" aria-label="Username" autocomplete="username" required>
+                    <input id="login-username" type="text" name="username" placeholder=" " aria-label="Username" autocomplete="username" required>
+                    <label for="login-username">Username</label>
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/></svg>
                 </div>
                 <div class="input-group animation" style="--i:2;">
-                    <input type="password" name="password" placeholder="Password" aria-label="Password" autocomplete="current-password" required>
+                    <input id="login-password" type="password" name="password" placeholder=" " aria-label="Password" autocomplete="current-password" required>
+                    <label for="login-password">Password</label>
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 9h-1V7a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2ZM10 7a2 2 0 1 1 4 0v2h-4V7Z"/></svg>
                 </div>
                 <button type="submit" class="btn animation" style="--i:3;">Login</button>
@@ -375,15 +390,18 @@
             <h2 class="animation" style="--i:0;">Register</h2>
             <form action="#" autocomplete="on">
                 <div class="input-group animation" style="--i:1;">
-                    <input type="text" name="new-username" placeholder="Username" aria-label="Username" autocomplete="username" required>
+                    <input id="register-username" type="text" name="new-username" placeholder=" " aria-label="Username" autocomplete="username" required>
+                    <label for="register-username">Username</label>
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/></svg>
                 </div>
                 <div class="input-group animation" style="--i:2;">
-                    <input type="email" name="email" placeholder="Email" aria-label="Email" autocomplete="email" required>
+                    <input id="register-email" type="email" name="email" placeholder=" " aria-label="Email" autocomplete="email" required>
+                    <label for="register-email">Email</label>
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/></svg>
                 </div>
                 <div class="input-group animation" style="--i:3;">
-                    <input type="password" name="new-password" placeholder="Password" aria-label="Password" autocomplete="new-password" required>
+                    <input id="register-password" type="password" name="new-password" placeholder=" " aria-label="Password" autocomplete="new-password" required>
+                    <label for="register-password">Password</label>
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 9h-1V7a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2ZM10 7a2 2 0 1 1 4 0v2h-4V7Z"/></svg>
                 </div>
                 <button type="submit" class="btn animation" style="--i:4;">Register</button>
@@ -398,15 +416,48 @@
         const container = document.getElementById('container');
         const toSignupBtn = document.getElementById('to-signup');
         const toLoginBtn = document.getElementById('to-login');
+        let transitionAudioContext;
+
+        function playTransitionSound() {
+            const AudioContextConstructor = window.AudioContext;
+            if (!AudioContextConstructor) return;
+
+            transitionAudioContext ??= new AudioContextConstructor();
+            if (transitionAudioContext.state === 'suspended') {
+                transitionAudioContext.resume();
+            }
+
+            const now = transitionAudioContext.currentTime;
+            const oscillator = transitionAudioContext.createOscillator();
+            const volume = transitionAudioContext.createGain();
+
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(520, now);
+            oscillator.frequency.exponentialRampToValueAtTime(780, now + 0.16);
+            volume.gain.setValueAtTime(0.0001, now);
+            volume.gain.exponentialRampToValueAtTime(0.035, now + 0.025);
+            volume.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
+
+            oscillator.connect(volume);
+            volume.connect(transitionAudioContext.destination);
+            oscillator.start(now);
+            oscillator.stop(now + 0.2);
+        }
 
         toSignupBtn.addEventListener('click', (event) => {
             event.preventDefault();
-            container.classList.add('active');
+            if (!container.classList.contains('active')) {
+                container.classList.add('active');
+                playTransitionSound();
+            }
         });
 
         toLoginBtn.addEventListener('click', (event) => {
             event.preventDefault();
-            container.classList.remove('active');
+            if (container.classList.contains('active')) {
+                container.classList.remove('active');
+                playTransitionSound();
+            }
         });
     </script>
 </body>
